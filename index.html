@@ -30,7 +30,6 @@
     </div>
 
     <script>
-        // Rotating background images randomly
         const backgrounds = [
             './backgrounds/image1.jpeg',
             './backgrounds/image2.jpg',
@@ -40,13 +39,26 @@
             './backgrounds/image6.jpg',
         ];
 
-        function changeBackground() {
-            const randomIndex = Math.floor(Math.random() * backgrounds.length);
-            document.body.style.backgroundImage = `url('${backgrounds[randomIndex]}')`;
+        let currentBackgroundIndex = 0;
+
+        function preloadImage(src) {
+            const img = new Image();
+            img.src = src;
         }
 
-        setInterval(changeBackground, 60000); // Change background every 1 minute
-        changeBackground(); // Initial background change
+        function changeBackground() {
+            currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.length;
+            const nextImage = backgrounds[currentBackgroundIndex];
+            preloadImage(nextImage);
+            document.body.style.backgroundImage = `url('${nextImage}')`;
+        }
+
+        // Preload all images initially
+        backgrounds.forEach(preloadImage);
+
+        // Set initial background and start rotating
+        document.body.style.backgroundImage = `url('${backgrounds[currentBackgroundIndex]}')`;
+        setInterval(changeBackground, 60000); // Change background every 60 seconds
 
         // Timer and To-Do List functionality
         let timerInterval;
