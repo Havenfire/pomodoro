@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div class="todo-list">
+        <h2>To-Do List</h2>
+        <input type="text" id="todo-input" placeholder="Add a new task">
+        <ul id="todo-items"></ul>
+    </div>
+
+    <div class="timer-container">
         <h1>Pomodoro Timer</h1>
         <div class="timer" id="timer">25:00</div>
         <div class="controls">
@@ -15,16 +22,35 @@
             <button id="pause">Pause</button>
             <button id="reset">Reset</button>
         </div>
-        <div class="todo-list">
-            <h2>To-Do List</h2>
-            <input type="text" id="todo-input" placeholder="Add a new task">
-            <ul id="todo-items"></ul>
-        </div>
+    </div>
+
+    <div class="coke-container">
+        <h2>Enjoy a Coke!</h2>
+        <img src="coke.jpg" alt="Coke" style="width: 150px;">
     </div>
 
     <script>
+        // Rotating background images randomly
+        const backgrounds = [
+            './backgrounds/image1.jpeg',
+            './backgrounds/image2.jpg',
+            './backgrounds/image3.jpg',
+            './backgrounds/image4.jpg',
+            './backgrounds/image5.jpg',
+            './backgrounds/image6.jpg',
+        ];
+
+        function changeBackground() {
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            document.body.style.backgroundImage = `url('${backgrounds[randomIndex]}')`;
+        }
+
+        setInterval(changeBackground, 60000); // Change background every 1 minute
+        changeBackground(); // Initial background change
+
+        // Timer and To-Do List functionality
         let timerInterval;
-        let timeLeft = 25 * 60; // Default to 25 minutes
+        let timeLeft = 25 * 60;
         const timerDisplay = document.getElementById('timer');
 
         function updateTimerDisplay() {
@@ -60,23 +86,6 @@
             updateTimerDisplay();
         });
 
-        // Rotating background images
-        const backgrounds = [
-            'url("https://source.unsplash.com/featured/?nature")',
-            'url("https://source.unsplash.com/featured/?city")',
-            'url("https://source.unsplash.com/featured/?space")',
-        ];
-        let currentBackgroundIndex = 0;
-
-        function changeBackground() {
-            document.body.style.backgroundImage = backgrounds[currentBackgroundIndex];
-            currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.length;
-        }
-
-        setInterval(changeBackground, 10000); // Change every 10 seconds
-        changeBackground();
-
-        // To-Do List functionality
         const todoInput = document.getElementById('todo-input');
         const todoItems = document.getElementById('todo-items');
 
