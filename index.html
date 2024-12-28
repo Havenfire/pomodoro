@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="timer" id="timer">25:00</div>
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="pause">Pause</button>
+            <button id="reset">Reset</button>
+        </div>
+        <div class="todo-list">
+            <h2>To-Do List</h2>
+            <input type="text" id="todo-input" placeholder="Add a new task">
+            <ul id="todo-items"></ul>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let timeLeft = 25 * 60; // Default to 25 minutes
+        const timerDisplay = document.getElementById('timer');
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        document.getElementById('start').addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        alert('Time is up!');
+                    }
+                }, 1000);
+            }
+        });
+
+        document.getElementById('pause').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        });
+
+        // Rotating background images
+        const backgrounds = [
+            'url("https://source.unsplash.com/featured/?nature")',
+            'url("https://source.unsplash.com/featured/?city")',
+            'url("https://source.unsplash.com/featured/?space")',
+        ];
+        let currentBackgroundIndex = 0;
+
+        function changeBackground() {
+            document.body.style.backgroundImage = backgrounds[currentBackgroundIndex];
+            currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.length;
+        }
+
+        setInterval(changeBackground, 10000); // Change every 10 seconds
+        changeBackground();
+
+        // To-Do List functionality
+        const todoInput = document.getElementById('todo-input');
+        const todoItems = document.getElementById('todo-items');
+
+        todoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && todoInput.value.trim()) {
+                const li = document.createElement('li');
+                li.textContent = todoInput.value.trim();
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'X';
+                deleteBtn.addEventListener('click', () => li.remove());
+
+                li.appendChild(deleteBtn);
+                todoItems.appendChild(li);
+                todoInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
